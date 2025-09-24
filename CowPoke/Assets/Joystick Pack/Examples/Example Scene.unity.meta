@@ -1,11 +1,7 @@
 fileFormatVersion: 2
-guid: ba0d0e7a039f526499c356a3c5cd6d3f
-MonoImporter:
+guid: 414bddd31c5ea4f4c9f5d1452e5bbb41
+DefaultImporter:
   externalObjects: {}
-  serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
-  icon: {instanceID: 0}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -14,5 +10,5 @@ AssetOrigin:
   productId: 107631
   packageName: Joystick Pack
   packageVersion: 2.1
-  assetPath: Assets/Joystick Pack/Scripts/Joysticks/DynamicJoystick.cs
+  assetPath: Assets/Joystick Pack/Examples/Example Scene.unity
   uploadId: 301683

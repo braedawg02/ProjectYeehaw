@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 52071c88a467b46438b3cbf159bf988b
+guid: ba0d0e7a039f526499c356a3c5cd6d3f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -14,5 +14,5 @@ AssetOrigin:
   productId: 107631
   packageName: Joystick Pack
   packageVersion: 2.1
-  assetPath: Assets/Joystick Pack/Scripts/Editor/DynamicJoystickEditor.cs
+  assetPath: Assets/Scripts/Scripts/Joysticks/DynamicJoystick.cs
   uploadId: 301683
