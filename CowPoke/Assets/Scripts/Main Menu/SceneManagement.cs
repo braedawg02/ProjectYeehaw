@@ -18,4 +18,10 @@ public class SceneManagement : MonoBehaviour
         // Turns off Unity Editor Play Mode
         UnityEditor.EditorApplication.isPlaying = false;
     }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(sceneToLoad);
+        Time.timeScale = 1f;
+    }
 }

@@ -1,12 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// Small, reusable Health component.
-/// - Use TakeDamage(int) to apply damage (Projectile.SendMessage("TakeDamage", damage) will call this)
-/// - Call Heal(int) to restore health
-/// - Die() is invoked when health reaches zero; by default the GameObject is destroyed.
-/// </summary>
-public class Health : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
     [Tooltip("Maximum hit points.")]
     public int maxHealth = 3;
@@ -23,7 +17,7 @@ public class Health : MonoBehaviour
     public bool IsDead => currentHealth <= 0;
 
     public GameObject GameOverPanel;
-
+    
     void Awake()
     {
         if (currentHealth < 0) currentHealth = maxHealth;
@@ -39,6 +33,8 @@ public class Health : MonoBehaviour
         if (currentHealth <= 0)
         {
             Die();
+            Time.timeScale = 0f;
+            GameOverPanel.SetActive(true);
         }
     }
 
