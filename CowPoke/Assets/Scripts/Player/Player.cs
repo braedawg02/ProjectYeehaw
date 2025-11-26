@@ -169,13 +169,16 @@ public class JoystickPlayerExample : MonoBehaviour
                 var projComp = go.GetComponent<Projectile>();
                 if (projRb != null)
                 {
-                    projRb.linearVelocity = dir.normalized * projectileSpeed;
-                    // if there's also a Projectile component, initialize it for damage/owner/lifetime
-                    projComp?.Init(dir.normalized, projectileSpeed, projectileDamage, gameObject);
+                    // Inherit player velocity if available
+                    Vector3 inheritedVel = rb != null ? rb.linearVelocity : Vector3.zero;
+                    projRb.linearVelocity = dir.normalized * projectileSpeed + inheritedVel;
+                    // if there's also a Projectile component, initialize it for damage/owner/lifetime and inherited velocity
+                    projComp?.Init(dir.normalized, projectileSpeed, projectileDamage, gameObject, -1f, inheritedVel);
                 }
                 else if (projComp != null)
                 {
-                    projComp.Init(dir.normalized, projectileSpeed, projectileDamage, gameObject);
+                    Vector3 inheritedVel = rb != null ? rb.linearVelocity : Vector3.zero;
+                    projComp.Init(dir.normalized, projectileSpeed, projectileDamage, gameObject, -1f, inheritedVel);
                 }
                 else
                 {

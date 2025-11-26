@@ -70,11 +70,21 @@ public class Enemy : MonoBehaviour
 
         if (debug) Debug.Log($"[Enemy] '{gameObject.name}' - Player found at {playerTransform.position}, Enemy at {transform.position}");
 
+
         Vector3 toPlayer = playerTransform.position - transform.position;
         toPlayer.y = 0f; // keep movement on XZ plane
         float dist = toPlayer.magnitude;
-        
+
         if (debug) Debug.Log($"[Enemy] '{gameObject.name}' - Distance to player: {dist:F2}, Close distance: {closeDistance}");
+
+        // Always face the player on the XZ plane, even when close
+        if (toPlayer.sqrMagnitude > 0.0001f)
+        {
+            Vector3 lookDir = toPlayer.normalized;
+            // Only rotate on Y axis
+            Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 0.35f);
+        }
 
         if (dist <= closeDistance)
         {
@@ -100,7 +110,6 @@ public class Enemy : MonoBehaviour
         else
         {
             Vector3 newPos = transform.position + vel * deltaTime;
-            transform.LookAt(playerTransform.position);
             if (debug) Debug.Log($"[Enemy] '{gameObject.name}' - Moving transform from {transform.position} to {newPos}");
             transform.position = newPos;
         }

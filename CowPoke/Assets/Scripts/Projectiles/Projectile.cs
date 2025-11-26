@@ -51,33 +51,37 @@ public class Projectile : MonoBehaviour
         timer = lifeTime;
     }
 
+
     /// <summary>
     /// Initialize the projectile. Call this right after Instantiate.
     /// dir must be normalized.
+    /// Optionally pass inheritedVelocity to add the owner's velocity to the projectile (for momentum inheritance).
     /// </summary>
-    public void Init(Vector3 dir, float initSpeed, int initDamage, GameObject owner = null, float lifeOverride = -1f)
+    public void Init(Vector3 dir, float initSpeed, int initDamage, GameObject owner = null, float lifeOverride = -1f, Vector3 inheritedVelocity = default)
     {
         this.owner = owner;
         this.damage = initDamage;
 
         timer = lifeOverride > 0f ? lifeOverride : lifeTime;
 
+        Vector3 totalVelocity = dir * initSpeed + inheritedVelocity;
+
         if (rb != null)
         {
             // use physics velocity
-            rb.linearVelocity = dir * initSpeed;
+            rb.linearVelocity = totalVelocity;
             // ensure transform faces direction for visuals
             transform.forward = dir;
         }
         else
         {
-            velocity = dir * initSpeed;
+            velocity = totalVelocity;
             transform.forward = dir;
         }
 
         if (debug)
         {
-            Debug.Log($"[Projectile] Init: '{gameObject.name}' owner={(owner?owner.name:"null")} dmg={damage} speed={initSpeed} life={timer}");
+            Debug.Log($"[Projectile] Init: '{gameObject.name}' owner={(owner?owner.name:"null")} dmg={damage} speed={initSpeed} inheritedVel={inheritedVelocity} totalVel={totalVelocity} life={timer}");
         }
 
         // Ignore collisions between this projectile's colliders and the owner's colliders so owner can walk through their own bullets.
