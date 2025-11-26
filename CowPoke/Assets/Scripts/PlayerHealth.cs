@@ -30,6 +30,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (IsDead) return;
         currentHealth -= amount;
+        SoundManager.PlaySound(SoundType.Hurt);
         if (currentHealth <= 0)
         {
             Die();
@@ -46,6 +47,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void Die()
     {
+        SoundManager.PlaySound(SoundType.Death);
         // spawn effect if provided
         if (deathEffectPrefab != null)
         {
