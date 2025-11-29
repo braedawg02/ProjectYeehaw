@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -17,25 +18,24 @@ public class PlayerHealth : MonoBehaviour
     public bool IsDead => currentHealth <= 0;
 
     public GameObject GameOverPanel;
-    
+
+    public PlayerRagdoll ragdoll;
+
     void Awake()
     {
         if (currentHealth < 0) currentHealth = maxHealth;
     }
 
-    /// <summary>
-    /// Apply damage. This method signature is compatible with SendMessage from Projectile.
-    /// </summary>
     public void TakeDamage(int amount)
     {
         if (IsDead) return;
+
         currentHealth -= amount;
         SoundManager.PlaySound(SoundType.Hurt);
+
         if (currentHealth <= 0)
         {
-            Die();
-            Time.timeScale = 0f;
-            GameOverPanel.SetActive(true);
+            StartCoroutine(DeathSequence());
         }
     }
 
@@ -45,19 +45,37 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
     }
 
+
+    // ⭐ DEATH SEQUENCE WITH RAGDOLL + DELAY ⭐
+    private IEnumerator DeathSequence()
+    {
+        Die();
+
+        // Give ragdoll time to fall (physics-only mode)
+        yield return new WaitForSeconds(1.5f);
+
+        // Show Game Over UI
+        GameOverPanel.SetActive(true);
+
+        // OPTIONAL: freeze game AFTER ragdoll finishes
+        Time.timeScale = 0f;
+    }
+
+
     public void Die()
     {
         SoundManager.PlaySound(SoundType.Death);
-        // spawn effect if provided
-        if (deathEffectPrefab != null)
-        {
-            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
-        }
 
-        // optionally destroy
+        if (ragdoll != null)
+            ragdoll.EnableRagdoll();
+
+        if (deathEffectPrefab != null)
+            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+
         if (destroyOnDeath)
         {
-            Destroy(gameObject);
+            Destroy(gameObject, 3f); // allow ragdoll to settle
         }
     }
 }
+
