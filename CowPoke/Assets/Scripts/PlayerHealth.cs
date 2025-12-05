@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
-
+using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     [Tooltip("Maximum hit points.")]
-    public int maxHealth = 3;
+    public IntData maxHealth;
 
     [Tooltip("Current hit points (for debugging you can set this in inspector).")]
-    public int currentHealth = -1;
+    public IntData currentHealth;
 
     [Tooltip("If true the GameObject will be destroyed when health reaches zero.")]
     public bool destroyOnDeath = true;
@@ -15,34 +15,38 @@ public class PlayerHealth : MonoBehaviour
     [Tooltip("Optional effect prefab to spawn when this object dies.")]
     public GameObject deathEffectPrefab;
 
-    public bool IsDead => currentHealth <= 0;
+    public bool IsDead => currentHealth.value <= 0;
 
     public GameObject GameOverPanel;
 
     public PlayerRagdoll ragdoll;
+    
+    public Image healthBar;
 
     void Awake()
     {
-        if (currentHealth < 0) currentHealth = maxHealth;
+        if (currentHealth.value <= 0) currentHealth.value = maxHealth.value;
+        healthBar.fillAmount = 1f;
     }
 
     public void TakeDamage(int amount)
     {
         if (IsDead) return;
 
-        currentHealth -= amount;
+        currentHealth.value -= amount;
         SoundManager.PlaySound(SoundType.Hurt);
 
-        if (currentHealth <= 0)
+        if (currentHealth.value <= 0)
         {
             StartCoroutine(DeathSequence());
         }
+        UpdateHealthBar();
     }
 
     public void Heal(int amount)
     {
         if (IsDead) return;
-        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        currentHealth.value = Mathf.Min(maxHealth.value, currentHealth.value + amount);
     }
 
 
@@ -75,6 +79,14 @@ public class PlayerHealth : MonoBehaviour
         if (destroyOnDeath)
         {
             Destroy(gameObject, 3f); // allow ragdoll to settle
+        }
+    }
+    
+    public void UpdateHealthBar()
+    {
+        if (healthBar != null)
+        {
+            healthBar.fillAmount = (float)currentHealth.value / maxHealth.value;
         }
     }
 }
